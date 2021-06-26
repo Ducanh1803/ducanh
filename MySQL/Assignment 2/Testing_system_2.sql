@@ -1,0 +1,94 @@
+DROP DATABASE IF EXISTS BAITAP1;
+CREATE DATABASE BAITAP1;
+USE BAITAP1;
+
+DROP TABLE IF EXISTS Department;
+CREATE TABLE Department (
+ Department_id  SMALLINT AUTO_INCREMENT PRIMARY KEY,
+ Department_name VARCHAR (30) NOT NULL
+);
+
+DROP TABLE IF EXISTS `Position`;
+CREATE TABLE `Position`( 
+	Position_id  SMALLINT AUTO_INCREMENT PRIMARY KEY,
+  Position_name VARCHAR(30) NOT NULL
+);
+
+DROP TABLE IF EXISTS Account;
+CREATE TABLE Account( 
+	Account_id SMALLINT AUTO_INCREMENT PRIMARY KEY,
+	Email VARCHAR(50) UNIQUE KEY NOT NULL,
+	Username VARCHAR (30) NOT NULL,
+	Fullname VARCHAR (35) NOT NULL,
+	Department_id SMALLINT NOT NULL,
+	Position_id SMALLINT NOT NULL,
+	create_date  DATE,
+	FOREIGN KEY (Department_id ) REFERENCES Department (Department_id ),
+	FOREIGN KEY(Position_id) REFERENCES `Position`(Position_id)
+);
+
+DROP TABLE IF EXISTS `Group`;
+CREATE TABLE `Group`( 
+	Group_id SMALLINT AUTO_INCREMENT PRIMARY KEY, 
+	Group_name VARCHAR (30) NOT NULL, 
+	Creator_id SMALLINT NOT NULL, 
+	creator_date DATE 
+);
+
+DROP TABLE IF EXISTS GroupAccount;
+CREATE TABLE GroupAccount(
+	Group_id  SMALLINT AUTO_INCREMENT PRIMARY KEY,
+	Account_id SMALLINT NOT NULL,
+	Jonn_date  DATE,
+	FOREIGN KEY (Account_id) REFERENCES Account(Account_id)
+);
+
+DROP TABLE IF EXISTS TypeQuestion;
+CREATE TABLE TypeQuestion(
+	type_id  SMALLINT AUTO_INCREMENT PRIMARY KEY,
+	type_name VARCHAR(35) NOT NULL
+);
+
+DROP TABLE IF EXISTS CategoryQuestion;
+CREATE TABLE CategoryQuestion(
+	Category_id SMALLINT AUTO_INCREMENT PRIMARY KEY,
+	Category_name VARCHAR(35) NOT NULL
+);
+
+DROP TABLE IF EXISTS question;
+CREATE TABLE question(
+	question_id SMALLINT AUTO_INCREMENT PRIMARY KEY,
+	content  VARCHAR(50) NOT NULL,
+	category_id SMALLINT NOT NULL,
+	type_id  SMALLINT NOT NULL,
+	creator_id SMALLINT NOT NULL,
+	create_date DATE
+);
+
+DROP TABLE IF EXISTS Answers;
+CREATE TABLE Answers(
+	Answer_id  SMALLINT AUTO_INCREMENT PRIMARY KEY,
+	content VARCHAR(25) NOT NULL,
+	question_id SMALLINT NOT NULL,
+	isCorrect ENUM('TRUE','FALSE'),
+	FOREIGN KEY (question_id) REFERENCES Question(question_id)
+);
+
+DROP TABLE IF EXISTS Exam;
+CREATE TABLE Exam(
+	Exam_id SMALLINT AUTO_INCREMENT PRIMARY KEY,
+	`code` VARCHAR(10),
+	title VARCHAR(20),
+	category_id SMALLINT NOT NULL,
+	duration DATETIME,
+	creator_id SMALLINT NOT NULL,
+	create_date DATE
+);
+
+DROP TABLE IF EXISTS ExamQuestion;
+CREATE TABLE ExamQuestion(
+	Exam_id SMALLINT NOT NULL,
+	question_id SMALLINT NOT NULL,
+	FOREIGN KEY (question_id) REFERENCES Question(question_id),
+	FOREIGN KEY (Exam_id) REFERENCES Exam(Exam_id)
+);
